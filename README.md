@@ -1,6 +1,6 @@
 # 🏦 Projet Banque Sénégal
 > Automatisation de l'étude du positionnement des banques au Sénégal
-## 🌐 Démo Live ICI👉 Voir le tableau de bord en ligne(https://projet-banque-bceao-1.onrender.com)
+## 🌐 Démo Live ICI👉 Voir le tableau de bord en ligne (https://projet-banque-bceao-1.onrender.com)
 !
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
 ![Dash](https://img.shields.io/badge/Dash-2.17-blue?logo=plotly)
@@ -383,3 +383,4 @@ Mastère 2 Big Data & Data Strategy — 2025–2026
 ## 📄 Licence
 
 Projet académique — Mastère 2 Big Data & Data Strategy · 2025–2026
+
