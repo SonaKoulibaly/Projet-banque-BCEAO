@@ -1,6 +1,8 @@
+---
 # 🏦 Projet Banque Sénégal
 > Automatisation de l'étude du positionnement des banques au Sénégal
 ## 🌐 Démo Live ICI👉 Voir le tableau de bord en ligne(https://projet-banque-bceao-1.onrender.com)
+!
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python)
 ![Dash](https://img.shields.io/badge/Dash-2.17-blue?logo=plotly)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?logo=mongodb)
@@ -63,7 +65,7 @@ projet_banque_senegal/
 │       ├── banques_pdf_raw.csv
 │       ├── banques_pdf_raw_2023.csv
 │       ├── banques_normalized.csv
-│       └── banques_production.csv  ← Base finale (1492 docs, 2015–2023)
+│       └── banques_production_FINALE.csv  ← Base finale propre (215 docs, 2015–2023)
 │
 ├── etl/
 │   ├── 01_load_excel.py            ← Chargement Excel → MongoDB
@@ -102,10 +104,12 @@ projet_banque_senegal/
 |---|---|
 | **Source** | Rapport annuel BCEAO — Bilans et comptes de résultat |
 | **PDF 2022** | Pages 267–319 (section Sénégal) — 81 records |
-| **PDF 2023** | Pages 257–324 (section Sénégal) — 1304 records |
+| **PDF 2023** | Pages 256–315 (section Sénégal) — 27 banques · extraction corrigée mars 2026 |
 | **Outil** | `pdfplumber` (extraction tableaux natifs PDF) |
 
 > **Pourquoi pdfplumber et non OCR ?** Les PDFs BCEAO sont des documents natifs non scannés. `pdfplumber` extrait directement les tableaux sans nécessiter d'OCR. L'OCR serait utile uniquement pour des PDFs scannés (images).
+
+> **Correction extraction 2023 (mars 2026)** : L'extraction initiale produisait 1304 documents corrompus (sigle=NaN, colonnes financières NULL). La version corrigée utilise une extraction par coordonnées X/Y avec normalisation Unicode (gestion de `COÛT`, `RÉSULTAT` avec accents) et détection des valeurs sur lignes intermédiaires. Résultat : 27 documents propres, 0 NaN sur colonnes financières. Script de mise à jour : `data/processed/maj_mongodb_2023_FINAL.py`.
 
 ### Scraping Automatique BCEAO (`05_scrape_bceao.py`)
 | Élément | Détail |
@@ -122,9 +126,9 @@ projet_banque_senegal/
 ```
 BASE_SENEGAL2.xlsx  ──► 01_load_excel.py  ──► banques_raw        (134 docs)
 BCEAO_2022.pdf      ──► 02_extract_pdf.py ──► banques_pdf_raw    ( 81 docs)
-BCEAO_2023.pdf      ──► 05_scrape_bceao.py──► banques_pdf_raw   (1304 docs)
-                         03_normalize.py  ──► banques_normalized (1492 docs)
-                         04_clean.py      ──► banques_production (1492 docs)
+BCEAO_2023.pdf      ──► 05_scrape_bceao.py──► banques_pdf_raw    ( 27 docs propres)
+                         03_normalize.py  ──► banques_normalized (215 docs)
+                         04_clean.py      ──► banques_production (215 docs)
 ```
 
 ### Ratios calculés automatiquement
@@ -199,9 +203,9 @@ BCEAO_2023.pdf      ──► 05_scrape_bceao.py──► banques_pdf_raw   (130
 | Collection | Documents | Description |
 |---|---|---|
 | `banques_raw` | 134 | Données brutes Excel 2015–2020 |
-| `banques_pdf_raw` | 1385+ | Données brutes PDF BCEAO 2022–2023 |
-| `banques_normalized` | 1492 | Données fusionnées harmonisées |
-| `banques_production` | 1492 | Base finale — alimente le dashboard |
+| `banques_pdf_raw` | 108 | Données brutes PDF BCEAO 2022–2023 |
+| `banques_normalized` | 215 | Données fusionnées harmonisées |
+| `banques_production` | **215** | Base finale — alimente le dashboard (nettoyée mars 2026) |
 
 ---
 
@@ -300,7 +304,7 @@ pytest tests/ -v
 **1. Push GitHub**
 ```bash
 git add .
-git commit -m "Projet Banque Sénégal v2.0 — ML + 2023"
+git commit -m "Projet Banque Sénégal v3.0 — Données 2023 corrigées (215 docs)"
 git push origin main
 ```
 
@@ -340,8 +344,8 @@ git push origin main
 | Fonctionnalité | Statut |
 |---|---|
 | Pipeline ETL complet (Excel + PDF) | ✅ Fait |
-| MongoDB Atlas centralisé (1492 docs) | ✅ Fait |
-| Données 2015–2023 (27 banques) | ✅ Fait |
+| MongoDB Atlas centralisé (215 docs) | ✅ Fait |
+| Données 2015–2023 (27 banques) · extraction 2023 corrigée | ✅ Fait |
 | Dashboard 7 onglets | ✅ Fait |
 | KPIs globaux dynamiques | ✅ Fait |
 | Filtres interactifs + Reset | ✅ Fait |
@@ -378,6 +382,5 @@ Mastère 2 Big Data & Data Strategy — 2025–2026
 ---
 
 ## 📄 Licence
-
 
 Projet académique — Mastère 2 Big Data & Data Strategy · 2025–2026
