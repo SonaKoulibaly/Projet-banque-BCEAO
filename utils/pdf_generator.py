@@ -12,16 +12,16 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable, Image
 from reportlab.pdfgen import canvas as rl_canvas
 
-NAVY    = colors.HexColor("#080C1A")
-NAVY2   = colors.HexColor("#0D1530")
-COPPER  = colors.HexColor("#C87941")
-COPPER2 = colors.HexColor("#E8A96A")
-CREAM   = colors.HexColor("#F5F0E8")
+NAVY    = colors.HexColor("#060C0F")
+NAVY2   = colors.HexColor("#0A1510")
+CORAL   = colors.HexColor("#FF6B5B")
+AMBER   = colors.HexColor("#FFB347")
+CREAM   = colors.HexColor("#F5F2EC")
 SUCCESS = colors.HexColor("#2ECC71")
 DANGER  = colors.HexColor("#E74C3C")
-MUTED   = colors.HexColor("#7A8FAA")
+MUTED   = colors.HexColor("#7A9A88")
 WHITE   = colors.white
-LIGHT   = colors.HexColor("#F0EBE0")
+LIGHT   = colors.HexColor("#F0EDE6")
 
 def safe_val(v, pct=False, decimals=0):
     try:
@@ -51,12 +51,12 @@ class NumberedCanvas(rl_canvas.Canvas):
         w, h = A4
         self.setFillColor(NAVY)
         self.rect(0, 0, w, 1.2*cm, fill=1, stroke=0)
-        self.setFillColor(COPPER)
+        self.setFillColor(CORAL)
         self.setFont("Helvetica", 7.5)
         self.drawString(1.5*cm, 0.45*cm, "Dashboard Banques Senegal · Source BCEAO · Python · Dash · MongoDB Atlas")
         self.setFillColor(CREAM)
         self.drawRightString(w - 1.5*cm, 0.45*cm, f"Page {self._pageNumber} / {page_count}")
-        self.setStrokeColor(COPPER)
+        self.setStrokeColor(CORAL)
         self.setLineWidth(1.5)
         self.line(1.5*cm, h - 1.8*cm, w - 1.5*cm, h - 1.8*cm)
 
@@ -112,10 +112,10 @@ def generate_bank_pdf(df_global, sigle, annee):
     else:
         story.append(Paragraph(f"Rapport - {sigle}", title_s))
 
-    story.append(HRFlowable(width="100%", thickness=2, color=COPPER, spaceAfter=10))
+    story.append(HRFlowable(width="100%", thickness=2, color=CORAL, spaceAfter=10))
 
     # KPIs
-    def kpi_cell(lbl, val, col=COPPER):
+    def kpi_cell(lbl, val, col=CORAL):
         return [Paragraph(lbl, kpi_l_s),
                 Paragraph(val, ParagraphStyle("kv", fontName="Helvetica-Bold", fontSize=13, textColor=col, alignment=TA_CENTER))]
 
@@ -124,12 +124,12 @@ def generate_bank_pdf(df_global, sigle, annee):
         kpi_cell("RESULTAT NET", safe_val(rn), SUCCESS if (pd.notna(rn) and float(rn or 0)>=0) else DANGER),
         kpi_cell("FONDS PROPRES", safe_val(fp), colors.HexColor("#B87BFF")),
         kpi_cell("ROA", safe_val(roa, pct=True), colors.HexColor("#5BC8F5")),
-        kpi_cell("ROE", safe_val(roe, pct=True), COPPER),
-        kpi_cell("CIR", safe_val(cir, pct=True), SUCCESS if (cir and cir<60) else (COPPER2 if (cir and cir<80) else DANGER)),
+        kpi_cell("ROE", safe_val(roe, pct=True), CORAL),
+        kpi_cell("CIR", safe_val(cir, pct=True), SUCCESS if (cir and cir<60) else (CORAL if (cir and cir<80) else DANGER)),
     ]]
     kt = Table(kd, colWidths=[2.9*cm]*6, rowHeights=[1.3*cm])
     kt.setStyle(TableStyle([
-        ("BACKGROUND",(0,0),(-1,-1),LIGHT), ("BOX",(0,0),(-1,-1),0.5,COPPER),
+        ("BACKGROUND",(0,0),(-1,-1),LIGHT), ("BOX",(0,0),(-1,-1),0.5,CORAL),
         ("INNERGRID",(0,0),(-1,-1),0.3,colors.HexColor("#DDDDDD")),
         ("VALIGN",(0,0),(-1,-1),"MIDDLE"),("ALIGN",(0,0),(-1,-1),"CENTER"),
         ("TOPPADDING",(0,0),(-1,-1),5),("BOTTOMPADDING",(0,0),(-1,-1),5),
@@ -148,7 +148,7 @@ def generate_bank_pdf(df_global, sigle, annee):
                         safe_val(r.get("emploi")), safe_val(r.get("fonds_propres")),
                         safe_val(rn2), safe_val(r.get("effectif"),decimals=0), safe_val(r.get("agences"),decimals=0)])
     et = Table(evol_d, colWidths=[1.5*cm,2.3*cm,2.3*cm,2.3*cm,2.5*cm,2.5*cm,1.6*cm,1.5*cm])
-    es = TableStyle([("BACKGROUND",(0,0),(-1,0),NAVY),("TEXTCOLOR",(0,0),(-1,0),COPPER),
+    es = TableStyle([("BACKGROUND",(0,0),(-1,0),NAVY),("TEXTCOLOR",(0,0),(-1,0),CORAL),
                      ("FONTNAME",(0,0),(-1,0),"Helvetica-Bold"),("FONTSIZE",(0,0),(-1,-1),8),
                      ("ALIGN",(0,0),(-1,-1),"CENTER"),("ROWBACKGROUNDS",(0,1),(-1,-1),[LIGHT,WHITE]),
                      ("GRID",(0,0),(-1,-1),0.3,colors.HexColor("#CCCCCC")),
@@ -178,7 +178,7 @@ def generate_bank_pdf(df_global, sigle, annee):
             safe_val((float(fp3)/float(b2)*100) if (pd.notna(b2) and float(b2 or 1)!=0 and pd.notna(fp3)) else None, pct=True),
         ])
     rt = Table(rd, colWidths=[2*cm,3.5*cm,3.5*cm,3.5*cm,3.5*cm])
-    rt.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,0),NAVY2),("TEXTCOLOR",(0,0),(-1,0),COPPER),
+    rt.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,0),NAVY2),("TEXTCOLOR",(0,0),(-1,0),CORAL),
         ("FONTNAME",(0,0),(-1,0),"Helvetica-Bold"),("FONTSIZE",(0,0),(-1,-1),9),
         ("ALIGN",(0,0),(-1,-1),"CENTER"),("ROWBACKGROUNDS",(0,1),(-1,-1),[LIGHT,WHITE]),
         ("GRID",(0,0),(-1,-1),0.3,colors.HexColor("#CCCCCC")),
@@ -201,7 +201,7 @@ def generate_bank_pdf(df_global, sigle, annee):
         ["Resultat Net", safe_val(rn), "Beneficiaire" if (pd.notna(rn) and float(rn or 0)>0) else "Deficitaire"],
     ]
     pt = Table(pd_data, colWidths=[5*cm,5*cm,6.5*cm])
-    pt.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,0),NAVY),("TEXTCOLOR",(0,0),(-1,0),COPPER),
+    pt.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,0),NAVY),("TEXTCOLOR",(0,0),(-1,0),CORAL),
         ("FONTNAME",(0,0),(-1,0),"Helvetica-Bold"),("FONTSIZE",(0,0),(-1,-1),9),
         ("ALIGN",(1,0),(-1,-1),"CENTER"),("ROWBACKGROUNDS",(0,1),(-1,-1),[LIGHT,WHITE]),
         ("GRID",(0,0),(-1,-1),0.3,colors.HexColor("#CCCCCC")),
