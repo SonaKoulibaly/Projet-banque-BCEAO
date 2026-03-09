@@ -17,14 +17,14 @@ from dash import Input, Output, State, dcc, html, no_update
 import dash_bootstrap_components as dbc
 
 # ─── Palette centralisée ──────────────────────────────────────────────────────
-NAVY    = "#0A1628"
-NAVY2   = "#0F2040"
-GOLD    = "#D4A843"
-GOLD2   = "#F0C060"
-CREAM   = "#F8F4EE"
+NAVY    = "#060C0F"
+NAVY2   = "#0A1510"
+GOLD    = "#FF6B5B"
+GOLD2   = "#FFB347"
+CREAM   = "#F5F2EC"
 SUCCESS = "#2ECC71"
 DANGER  = "#E74C3C"
-MUTED   = "#8899AA"
+MUTED   = "#7A9A88"
 
 # Palette de 24 couleurs distinctes pour les banques
 PALETTE_BANQUES = [
@@ -782,7 +782,7 @@ def register_callbacks(app, df_global):
                     "Les années récentes ont plus de poids. "
                     "La confiance indique le R² du modèle (>70% = fiable)."
                 ], style={"color": MUTED, "fontSize": "12px",
-                          "background": "#111E35", "padding": "10px",
+                          "background": "#0C1A12", "padding": "10px",
                           "borderRadius": "6px", "borderLeft": f"3px solid {GOLD}"}),
             ], className="mb-3"),
 
@@ -1007,19 +1007,19 @@ def register_callbacks(app, df_global):
 <head><meta charset="UTF-8">
 <title>Rapport Banques Sénégal {last_y}</title>
 <style>
-  body{{font-family:'Segoe UI',sans-serif;background:#0A1628;color:#F8F4EE;margin:0;padding:20px}}
-  h1{{color:#D4A843;font-size:2em;border-bottom:2px solid #D4A843;padding-bottom:10px}}
-  h2{{color:#5BC8F5;margin-top:30px}}
+  body{{font-family:'Urbanist',sans-serif;background:#060C0F;color:#F5F2EC;margin:0;padding:20px}}
+  h1{{color:#FF6B5B;font-size:2em;border-bottom:2px solid #FF6B5B;padding-bottom:10px}}
+  h2{{color:#FFB347;margin-top:30px}}
   table{{width:100%;border-collapse:collapse;margin:15px 0}}
-  th{{background:#1E3050;color:#D4A843;padding:10px;text-align:left}}
-  td{{padding:8px;border-bottom:1px solid #1E3050;color:#F8F4EE}}
-  tr:hover{{background:#111E35}}
-  .kpi-box{{display:inline-block;background:#111E35;border:1px solid #1E3050;
+  th{{background:#0A1510;color:#FF6B5B;padding:10px;text-align:left;border-bottom:2px solid #FF6B5B}}
+  td{{padding:8px;border-bottom:1px solid rgba(255,107,91,0.1);color:#F5F2EC}}
+  tr:hover{{background:#0C1A12}}
+  .kpi-box{{display:inline-block;background:#0C1A12;border:1px solid rgba(255,107,91,0.2);
             border-radius:8px;padding:15px 25px;margin:10px;text-align:center}}
-  .kpi-val{{font-size:1.8em;font-weight:bold;color:#D4A843}}
-  .kpi-lbl{{font-size:.85em;color:#8899AA;margin-top:5px}}
-  footer{{margin-top:40px;color:#8899AA;font-size:.8em;
-          border-top:1px solid #1E3050;padding-top:10px}}
+  .kpi-val{{font-size:1.8em;font-weight:bold;color:#FFB347}}
+  .kpi-lbl{{font-size:.85em;color:#7A9A88;margin-top:5px}}
+  footer{{margin-top:40px;color:#7A9A88;font-size:.8em;
+          border-top:1px solid rgba(255,107,91,0.15);padding-top:10px}}
 </style></head>
 <body>
 <h1>🏦 Rapport — Positionnement des Banques au Sénégal</h1>
@@ -1095,15 +1095,16 @@ def register_callbacks(app, df_global):
             groupe = df_b.iloc[0].get("groupe_bancaire","N/D") if not df_b.empty else "N/D"
             html_f = f"""<!DOCTYPE html><html lang="fr">
 <head><meta charset="UTF-8"><title>Rapport {sigle}</title>
-<style>body{{font-family:sans-serif;background:#0A1628;color:#F8F4EE;padding:30px}}
-h1{{color:#D4A843}}table{{width:100%;border-collapse:collapse}}
-th{{background:#1E3050;color:#D4A843;padding:10px}}
-td{{padding:8px;border-bottom:1px solid #1E3050}}</style></head>
+<style>body{{font-family:'Urbanist',sans-serif;background:#060C0F;color:#F5F2EC;padding:30px}}
+h1{{color:#FF6B5B}}table{{width:100%;border-collapse:collapse}}
+th{{background:#0A1510;color:#FF6B5B;padding:10px;border-bottom:2px solid #FF6B5B}}
+td{{padding:8px;border-bottom:1px solid rgba(255,107,91,0.1)}}
+tr:hover{{background:#0C1A12}}</style></head>
 <body><h1>Rapport {sigle} — {annee}</h1><p>Groupe : {groupe}</p>
 <table><thead><tr><th>Année</th><th>Bilan</th><th>Ressources</th>
 <th>Emplois</th><th>Fonds Propres</th><th>Résultat Net</th></tr></thead>
 <tbody>{rows}</tbody></table>
-<p style="color:#8899AA;margin-top:20px">Source BCEAO 2015–2023</p>
+<p style="color:#7A9A88;margin-top:20px">Source BCEAO 2015–2023</p>
 </body></html>"""
             return dcc.send_string(html_f, f"rapport_{sigle}_{annee}.html")
 
@@ -1138,11 +1139,15 @@ td{{padding:8px;border-bottom:1px solid #1E3050}}</style></head>
                     rows += f"<td>{v:,.0f}</td>" if pd.notna(v) else "<td>N/D</td>"
                 rows += (f"<td style='color:{col}'>{rn:,.0f}</td></tr>\n"
                          if pd.notna(rn) else "<td>N/D</td></tr>\n")
-            html_f = (f"<html><body style='font-family:sans-serif;background:#0A1628;"
-                      f"color:#F8F4EE;padding:20px'>"
-                      f"<h1 style='color:#D4A843'>Rapport {sigle}</h1>"
-                      f"<table border='1'><thead><tr>"
-                      f"<th>Année</th><th>Bilan</th><th>Ressources</th>"
-                      f"<th>Emplois</th><th>Fonds Propres</th><th>Résultat Net</th>"
+            html_f = (f"<html><body style='font-family:Urbanist,sans-serif;background:#060C0F;"
+                      f"color:#F5F2EC;padding:20px'>"
+                      f"<h1 style='color:#FF6B5B'>Rapport {sigle}</h1>"
+                      f"<table border='1' style='border-color:rgba(255,107,91,0.2);width:100%;border-collapse:collapse'><thead><tr>"
+                      f"<th style='background:#0A1510;color:#FF6B5B;padding:8px'>Année</th>"
+                      f"<th style='background:#0A1510;color:#FF6B5B;padding:8px'>Bilan</th>"
+                      f"<th style='background:#0A1510;color:#FF6B5B;padding:8px'>Ressources</th>"
+                      f"<th style='background:#0A1510;color:#FF6B5B;padding:8px'>Emplois</th>"
+                      f"<th style='background:#0A1510;color:#FF6B5B;padding:8px'>Fonds Propres</th>"
+                      f"<th style='background:#0A1510;color:#FF6B5B;padding:8px'>Résultat Net</th>"
                       f"</tr></thead><tbody>{rows}</tbody></table></body></html>")
             return dcc.send_string(html_f, f"rapport_{sigle}_{annee}.html")
