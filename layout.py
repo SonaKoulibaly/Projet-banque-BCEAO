@@ -324,8 +324,9 @@ def create_layout(app, df, annees, banques, groupes):
                 html.Span("·"),
                 html.Span("Source : BCEAO · Base Sénégal 2015–2023"),
                 html.Span("·"),
-                html.Span("Python · Dash · MongoDB Atlas · ML Prédictif"),
+                html.Span("Python · Dash · MongoDB Atlas · ML Prédictif Par Sona.K"),
             ], className="footer-inner"),
         ], className="main-footer"),
+
 
     ], className="app-wrapper")
